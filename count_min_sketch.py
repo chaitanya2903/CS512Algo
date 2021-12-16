@@ -1,17 +1,20 @@
-import hashlib
-from hashing import Hash
+from hash_table import Hash
+import math 
 
 class CountMinSketch:
 
-    def __init__(self, m, d):
-        if not m or not d:
-            raise ValueError("m and d have to be non-zero")
-        self.m = m
-        self.d = d
+    def __init__(self, eps, delta):
+        self.m = int(1 / eps)
+        self.d = int(math.log(1/delta, 2))
         self.sketch = [[0]*self.m for _ in range(self.d)]
         self.h = Hash()
         self.hash_functions = [self.h.hash_function(_) for _ in range(self.d)]
-        
+    
+    def get_depth(self):
+        return self.d
+
+    def get_width(self):
+        return self.m
         
 
 
@@ -21,7 +24,8 @@ class CountMinSketch:
             self.sketch[_][idx] += 1
     
     def get_count(self, word):
-        return min([self.sketch[_][self.hash_functions[_](word)%self.m] for _ in range(self.d)])
+        count = min([self.sketch[_][self.hash_functions[_](word)%self.m] for _ in range(self.d)])
+        return count
     
     def display_sketch(self):
         print(self.sketch)
