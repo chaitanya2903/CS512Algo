@@ -1,11 +1,12 @@
+import hashlib
 from hash_table import Hash
 import math 
 
 class CountMinSketch:
 
     def __init__(self, eps, delta):
-        self.m = int(1 / eps)
-        self.d = int(math.log(1/delta, 2))
+        self.m = int(math.ceil(1 / eps))
+        self.d = int(math.ceil(math.log(1/delta, 2)))
         self.sketch = [[0]*self.m for _ in range(self.d)]
         self.h = Hash()
         self.hash_functions = [self.h.hash_function(_) for _ in range(self.d)]
